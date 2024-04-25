@@ -12,18 +12,39 @@
             <div class="col-md-8">
 
             <div class="form-area">
+                <form method="POST" action="{{ route('customersview.store') }}">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Customer name</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Customer phone number</label>
+                            <input type="number" class="form-control" name="phone_number">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mt-3">
+                            <input type="submit" class="btn btn-primary" value="Add">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="form-area">
                 <form method="POST" action="{{ route('bookingsview.store') }}">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
                             <label>Customer ID</label>
-                            <input type="number" class="form-control" name="customer_id">
+                            <input type="number" class="form-control" name="customer_id" value="{{ $latestCustomerId ?? '' }}">
                         </div>
                         <div class="col-md-6">
                             <label>Room ID</label>
                             <input type="number" class="form-control" name="room_id">
                         </div>
-                         <div class="col-md-12">
+                        <div class="col-md-12">
                             <label>Booking date</label>
                             <input type="date" class="form-control" name="booking_date">
                         </div>
@@ -40,10 +61,63 @@
                         <div class="col-md-12 mt-3">
                             <input type="submit" class="btn btn-primary" value="Add">
                         </div>
-
                     </div>
                 </form>
             </div>
+            <div id='calendar' class="mt-3"></div>
+
+            @php
+                $today = new DateTime();
+                $todayFormatted = $today->format('Y-m-d');
+                $events = [];
+                $colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A8', '#A833FF']; // Add more colors as needed
+            @endphp
+
+            @foreach($bookings as $index => $booking)
+                @php
+                    $start_datetime = date("Y-m-d", strtotime($booking->booking_date)) . 'T' . date("H:i:s", strtotime($booking->start_time));
+                    $end_datetime = date("Y-m-d", strtotime($booking->booking_date)) . 'T' . date("H:i:s", strtotime($booking->end_time));
+                @endphp
+                @php
+                    $events[] = [
+                        'title' => 'Room ' . $booking->room_id,
+                        'start' => $start_datetime,
+                        'end' => $end_datetime,
+                        'resourceId' => $booking->room_id,
+                        'color' => $colors[$index % count($colors)] // Assign a color from the list based on the room's index
+                    ];
+                @endphp
+            @endforeach
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var calendarEl = document.getElementById('calendar');
+
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                        initialView: 'resourceTimeline',
+                        slotDuration: '00:30:00',
+                        slotLabelInterval: '01:00:00',
+                        allDaySlot: false,
+                        resourceAreaWidth: '10%',
+                        contentHeight: 'auto',
+                        nowIndicator: 'true',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'resourceTimeline,timeGridWeek,dayGridMonth'
+                        },
+                        resources: [
+                            @foreach($bookings as $booking)
+                                { id: '{{ $booking->room_id }}', title: 'Room {{ $booking->room_id }}',},
+                            @endforeach
+                        ],
+                        events: {!! json_encode($events) !!}
+                    });
+
+                    calendar.render();
+                });
+            </script>
 
                 <table class="table mt-5">
                     <thead>
@@ -89,9 +163,6 @@
 
                         @endforeach
 
-
-
-
                     </tbody>
                   </table>
             </div>
@@ -102,22 +173,23 @@
 
 
 @push('css')
-    <style>
-        .form-area{
-            padding: 20px;
-            margin-top: 20px;
-            background-color:#b3e5fc;
-        }
+<style>
+    .form-area {
+        padding: 20px;
+        margin-top: 20px;
+        background-color: #b3e5fc;
+    }
 
-        .bi-trash-fill{
-            color:red;
-            font-size: 18px;
-        }
-
-        .bi-pencil{
-            color:green;
-            font-size: 18px;
-            margin-left: 20px;
-        }
-    </style>
+    .booking-block {
+        display: block;
+        width: 100%;
+        height: 50px;
+        background-color: #007BFF;
+        position: relative;
+        margin-top: 5px;
+    }
+</style>
 @endpush
+
+
+

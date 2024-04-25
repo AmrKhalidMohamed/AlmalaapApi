@@ -39,6 +39,10 @@
                             <label>Description</label>
                             <textarea type="text" class="form-control" name="description" rows="5"></textarea>
                         </div>
+                        <div class="col-md-12">
+                            <label>Ardescription</label>
+                            <textarea type="text" class="form-control" name="ArDescription" rows="5"></textarea>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 mt-3">
@@ -57,6 +61,7 @@
                         <th scope="col">Capacity</th>
                         <th scope="col">Price</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Ar description</th>
                         <th scope="col">Branch</th>
                         <th scope="col">Images</th>
                       </tr>
@@ -71,6 +76,7 @@
                             <td scope="col">{{ $room->capacity }}</td>
                             <td scope="col">{{ $room->price }}</td>
                             <td scope="col">{{ $room->description }}</td>
+                            <td scope="col">{{ $room->ArDescription }}</td>
                             <td scope="col">{{ $room->branch }}</td>
                             <td scope="col">
                                 @foreach ($room->images as $image)

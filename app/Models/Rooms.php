@@ -19,6 +19,7 @@ class Rooms extends Model
         'capacity',
         'price',
         'description',
+        'ArDescription',
         'branch'
     ];
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\RoomViewController;
 use App\Http\Controllers\ImageViewController;
 use App\Http\Controllers\BookingViewController;
@@ -16,4 +17,6 @@ Route::get('/customers/{customer}/edit', [CustomerViewController::class, 'edit']
 Route::resource("/bookingsview", BookingViewController::class);
 Route::resource("/roomsview", RoomViewController::class);
 Route::resource("/imagesview", ImageViewController::class);
+Route::get('/calendar', [CalendarController::class ,'index'])->name('calendar');
+
 

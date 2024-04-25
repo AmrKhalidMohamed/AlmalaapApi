@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookings;
+use App\Models\Customers;
 use Illuminate\Http\Request;
 
 class BookingViewController extends Controller
 {
 
     protected $booking;
-    public function __construct(){
+    protected $customer;
+
+    public function __construct()
+    {
         $this->booking = new Bookings();
+        $this->customer = new Customers();
     }
     /**
      * Display a listing of the resource.
@@ -18,6 +23,7 @@ class BookingViewController extends Controller
     public function index()
     {
         $response['bookings'] = $this->booking->all();
+        $response['latestCustomerId'] = $this->customer->latest()->first()->id ?? null;
         return view('pages.bookings.index')->with($response);
     }
 
@@ -34,7 +40,13 @@ class BookingViewController extends Controller
      */
     public function store(Request $request)
     {
-        $this->booking->create($request->all());
+
+
+        // Create a new booking with the latest customer_id
+        $bookingData = $request->all();
+
+        $this->booking->create($bookingData);
+
         return redirect()->back();
     }
 

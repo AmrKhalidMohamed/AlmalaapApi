@@ -18,8 +18,10 @@ class CustomerViewController extends Controller
     public function index()
     {
         $response['customers'] = $this->customer->all();
+        $response['latestCustomerId'] = $this->customer->latest()->first()->id?? null; // Get the latest customer ID
         return view('pages.customers.index')->with($response);
     }
+
 
     /**
      * Show the form for creating a new resource.

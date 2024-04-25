@@ -26,6 +26,7 @@ class RoomsController extends Controller
             'capacity' => $request->capacity,
             'price' => $request->price,
             'description' => $request->description,
+            'ArDescription' => $request->ArDescription,
             'branch' => $request->branch,
         ]);
 
@@ -50,6 +51,7 @@ class RoomsController extends Controller
             'capacity' => $request->capacity,
             'price' => $request->price,
             'description' => $request->description,
+            'ArDescription' => $request->ArDescription,
             'branch' => $request->branch,
         ]);
 

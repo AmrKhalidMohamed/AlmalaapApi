@@ -43,6 +43,15 @@
 
                     </div>
                     <div class="row">
+                        <div class="col-md-12">
+                            <label>ArDescription</label>
+                            <textarea type="text" class="form-control" name="ArDescription" rows="5">
+                                {{ $room->ArDescription }}
+                            </textarea>
+                        </div>
+
+                    </div>
+                    <div class="row">
                         <div class="col-md-12 mt-3">
                             <input type="submit" class="btn btn-primary" value="Update">
                         </div>

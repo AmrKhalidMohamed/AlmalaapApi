@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('capacity');
             $table->integer('price');
             $table->text('description')->nullable();
+            $table->text('ArDescription')->nullable();
             $table->integer('branch');
             $table->timestamps();
         });
