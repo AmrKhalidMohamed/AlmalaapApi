@@ -33,15 +33,14 @@ RUN composer install --no-dev --optimize-autoloader
 # Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Configure Apache for Render (port 10000, public directory)
-RUN sed -i 's/80/10000/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && \
-    sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf && \
+# Configure Apache for public directory
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf && \
     echo '<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 10000
+EXPOSE 80
 
 CMD ["apache2-foreground"]
