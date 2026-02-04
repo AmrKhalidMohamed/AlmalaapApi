@@ -75,12 +75,22 @@
 
             @foreach($bookings as $index => $booking)
                 @php
-                    $start_datetime = date("Y-m-d", strtotime($booking->booking_date)) . 'T' . date("H:i:s", strtotime($booking->start_time));
-                    $end_datetime = date("Y-m-d", strtotime($booking->booking_date)) . 'T' . date("H:i:s", strtotime($booking->end_time));
+                    $booking_date = new DateTime($booking->booking_date);
+                    $start_time = new DateTime($booking->start_time);
+                    $end_time = new DateTime($booking->end_time);
+
+                    // If the start time is after midnight and before 9 AM, adjust to the next day
+                    if ($start_time->format('H') < 9) {
+                        $booking_date->modify('+1 day');
+                    }
+
+                    $start_datetime = $booking_date->format('Y-m-d') . 'T' . $start_time->format('H:i:s');
+                    $end_datetime = $booking_date->format('Y-m-d') . 'T' . $end_time->format('H:i:s');
                 @endphp
+
                 @php
                     $events[] = [
-                        'title' => 'Room ' . $booking->room_id,
+                        'title' => $booking->room->room_number,
                         'start' => $start_datetime,
                         'end' => $end_datetime,
                         'resourceId' => $booking->room_id,
@@ -89,6 +99,7 @@
                 @endphp
             @endforeach
 
+
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     var calendarEl = document.getElementById('calendar');
@@ -96,8 +107,10 @@
                     var calendar = new FullCalendar.Calendar(calendarEl, {
                         schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
                         initialView: 'resourceTimeline',
-                        slotDuration: '00:30:00',
                         slotLabelInterval: '01:00:00',
+                        slotMinTime: '10:00:00', // Start at 10 AM
+                        slotMaxTime: '34:00:00', // End at 9 AM the next day
+                        scrollTime: '10:00:00',
                         allDaySlot: false,
                         resourceAreaWidth: '10%',
                         contentHeight: 'auto',
@@ -132,15 +145,16 @@
                     </thead>
                     <tbody>
 
-                        @foreach ( $bookings as $key => $booking )
-
+                        @foreach ($bookings as $key => $booking)
                         <tr>
                             <td scope="col">{{ ++$key }}</td>
                             <td scope="col">
                                 {{ $booking->customer_id }}
                                 <a href="{{ route('customersview.edit', ['customer' => $booking->customer_id]) }}">show</a>
                             </td>
-                            <td scope="col">{{ $booking->room_id }}</td>
+                            <td scope="col">
+                                {{ $booking->room_id }} - {{ $booking->room->room_number }}
+                            </td>
                             <td scope="col">{{ $booking->booking_date }}</td>
                             <td scope="col">{{ $booking->start_time }}</td>
                             <td scope="col">{{ $booking->end_time }}</td>

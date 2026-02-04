@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bookings;
 use App\Models\Customers;
+use App\Models\Rooms;
 use Illuminate\Http\Request;
 
 class BookingViewController extends Controller
@@ -24,6 +25,7 @@ class BookingViewController extends Controller
     {
         $response['bookings'] = $this->booking->all();
         $response['latestCustomerId'] = $this->customer->latest()->first()->id ?? null;
+        $response['rooms'] = Rooms::all();
         return view('pages.bookings.index')->with($response);
     }
 

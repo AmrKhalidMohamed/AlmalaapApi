@@ -43,7 +43,7 @@ RUN sed -i 's/80/10000/g' /etc/apache2/sites-available/000-default.conf /etc/apa
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' >> /etc/apache2/sites-available/000-default.conf
+    </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 10000
 
