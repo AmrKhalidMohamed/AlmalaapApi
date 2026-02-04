@@ -13,10 +13,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Install PostgreSQL client
-RUN apt-get install -y libpq-dev
 
 # Install PHP extensions (including PostgreSQL)
 RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip exif pcntl bcmath gd
